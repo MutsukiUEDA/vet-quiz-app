@@ -60,7 +60,10 @@ function checkAnswer(btn, sel, ans) {
   if (sel === ans) { btn.classList.add('correct'); score++; resultEl.textContent = '正解！'; }
   else {
     btn.classList.add('wrong');
-    choicesEl.children[correct].firstChild.classList.add('correct');
+    if (correct >= 0 && correct < choicesEl.children.length) {
+      const correctButton = choicesEl.children[correct].firstChild;
+      if (correctButton) correctButton.classList.add('correct');
+    };
     resultEl.textContent = '残念…';
   }
   nextBtn.classList.remove('hidden');
