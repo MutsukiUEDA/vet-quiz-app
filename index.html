@@ -1,0 +1,41 @@
+<!-- index.html -->
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>4択クイズ</title>
+  <link rel="stylesheet" href="style.css">
+  <!-- index.html の <head> 内など -->
+  <script src="https://cdn.jsdelivr.net/npm/papaparse@5.4.3/papaparse.min.js"></script>
+  <script type="module" src="script.js"></script>
+
+</head>
+<body>
+  <div class="container">
+
+    <!-- 進捗バーとスコア -->
+    <header>
+      <h1 class="title">4択クイズ</h1>
+      <div id="progress-wrapper">
+        <div id="progress-bar"></div>
+      </div>
+      <p id="score-label">0 / 10</p>
+    </header>
+
+    <!-- 質問 -->
+    <main>
+      <h2 id="question">ここに問題文</h2>
+      <ul id="choices"></ul>
+    </main>
+
+    <!-- フッター（次へボタン＆結果表示） -->
+    <footer>
+      <p id="result"></p>
+      <button id="next-btn" class="hidden">次の問題 ▶</button>
+    </footer>
+
+  </div>
+  <script type="module" src="script.js"></script>
+</body>
+</html>
