@@ -23,7 +23,7 @@ fetch(CSV_URL)
     return {
       question: row.Question,
       choices,
-      answer
+      answer,
       explanation: row.Explanation 
     };
   });
