@@ -115,6 +115,7 @@ scoreEl.textContent = `${score} / ${quiz.length}`;
 
 function showFinal() {
 questionEl.textContent = `終了！得点は ${score} / ${quiz.length} 点`;
+resultEl.textContent = ''; 
 choicesEl.innerHTML = '';
 progressEl.style.width = '100%';
 nextBtn.textContent = 'もう一度';
