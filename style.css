@@ -58,6 +58,13 @@
   }
   .hidden { display: none; }
   
+  #explanation {
+    text-align: left;
+    margin-top: 0.5rem;
+    font-size: 0.95rem;
+    line-height: 1.6;
+  }
+
   /* モバイルならボタンを大きく */
   @media (max-width:480px){
     .choice-btn { font-size: 1.1rem; }
