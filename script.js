@@ -4,22 +4,38 @@ const CSV_URL =
 
 /* === 2. CSV を読み込み、配列にしてからクイズ開始 ============ */
 fetch(CSV_URL)
-  .then(r => r.text())
-  .then(text => {
-    const { data } = Papa.parse(text, { header: true, skipEmptyLines: true });
-    const questions = data.map(row => ({
+.then(response => response.text())
+.then(csvText => {
+  const { data } = Papa.parse(csvText, { header: true, skipEmptyLines: true });
+
+  const questions = data.map(row => {
+    const choices = [row.Choice1, row.Choice2, row.Choice3, row.Choice4];
+
+    let answer = Number(row.AnswerIndex);
+    if (isNaN(answer)) {
+      answer = choices.indexOf(row.AnswerIndex); // 文字列としてマッチ
+    }
+
+    if (answer < 0 || answer >= choices.length) {
+      console.warn(`無効な正解: ${row.AnswerIndex}（問題: ${row.Question}）`);
+    }
+
+    return {
       question: row.Question,
-      choices : [row.Choice1, row.Choice2, row.Choice3, row.Choice4],
-      answer  : Number(row.AnswerIndex)
-    }));
-    startQuiz(questions);           // ← ここから下はクイズ本体
-  })
-  .catch(e => {
-    alert('問題データを取得できませんでした');
-    console.error(e);
+      choices,
+      answer
+    };
   });
 
-/* === 3. クイズ本体（以前のロジックをここに一本化） ============ */
+  startQuiz(questions);
+})
+.catch(error => {
+  alert('問題データを取得できませんでした');
+  console.error(error);
+});
+
+/* === 2. クイズ機能（ロジック本体） =========================== */
+
 let quiz = [], current = 0, score = 0;
 
 const questionEl = document.getElementById('question');
@@ -32,58 +48,84 @@ const nextBtn    = document.getElementById('next-btn');
 nextBtn.addEventListener('click', () => loadQuestion(++current));
 
 function startQuiz(all) {
-  quiz = shuffle([...all]).slice(0, 10);     // 10 問抽出
-  current = score = 0;
-  loadQuestion(current);
+quiz = shuffle([...all]).slice(0, 10);
+current = score = 0;
+loadQuestion(current);
 }
 
 function loadQuestion(i) {
-  if (i >= quiz.length) { showFinal(); return; }
-  resultEl.textContent = '';
-  nextBtn.classList.add('hidden');
-  choicesEl.innerHTML = '';
-
-  const q = quiz[i];
-  questionEl.textContent = q.question;
-  q.choices.forEach((c, idx) => {
-    const btn = document.createElement('button');
-    btn.className = 'choice-btn';
-    btn.textContent = c;
-    btn.onclick = () => checkAnswer(btn, idx, q.answer);
-    choicesEl.appendChild(btn);
-  });
-  updateProgress();
+if (i >= quiz.length) {
+  showFinal();
+  return;
 }
 
-function checkAnswer(btn, sel, ans) {
-  disableChoices();
-  if (sel === ans) { btn.classList.add('correct'); score++; resultEl.textContent = '正解！'; }
-  else {
-    btn.classList.add('wrong');
-    if (correct >= 0 && correct < choicesEl.children.length) {
-      const correctButton = choicesEl.children[correct].firstChild;
-      if (correctButton) correctButton.classList.add('correct');
-    };
-    resultEl.textContent = '残念…';
+resultEl.textContent = '';
+nextBtn.classList.add('hidden');
+choicesEl.innerHTML = '';
+
+const q = quiz[i];
+questionEl.textContent = q.question;
+
+q.choices.forEach((text, idx) => {
+  const btn = document.createElement('button');
+  btn.className = 'choice-btn';
+  btn.textContent = text;
+  btn.onclick = () => checkAnswer(btn, idx, q.answer);
+  const li = document.createElement('li');
+  li.appendChild(btn);
+  choicesEl.appendChild(li);
+});
+
+updateProgress();
+}
+
+function checkAnswer(btn, selected, correct) {
+disableChoices();
+
+if (selected === correct) {
+  btn.classList.add('correct');
+  score++;
+  resultEl.textContent = '正解！';
+} else {
+  btn.classList.add('wrong');
+
+  if (correct >= 0 && correct < choicesEl.children.length) {
+    const correctBtn = choicesEl.children[correct].firstChild;
+    if (correctBtn) {
+      correctBtn.classList.add('correct');
+    }
   }
-  nextBtn.classList.remove('hidden');
-  updateProgress();
+
+  resultEl.textContent = '残念…';
 }
 
-function disableChoices() { document.querySelectorAll('.choice-btn').forEach(b => b.disabled = true); }
+nextBtn.classList.remove('hidden');
+updateProgress();
+}
+
+function disableChoices() {
+document.querySelectorAll('.choice-btn').forEach(b => b.disabled = true);
+}
 
 function updateProgress() {
-  progressEl.style.width = ((current + 1) / quiz.length * 100) + '%';
-  scoreEl.textContent = `${score} / ${quiz.length}`;
+const percent = ((current + 1) / quiz.length) * 100;
+progressEl.style.width = `${percent}%`;
+scoreEl.textContent = `${score} / ${quiz.length}`;
 }
 
 function showFinal() {
-  questionEl.textContent = `終了！得点は ${score} / ${quiz.length} 点`;
-  choicesEl.innerHTML = '';
-  progressEl.style.width = '100%';
-  nextBtn.textContent = 'もう一度';
-  nextBtn.classList.remove('hidden');
-  nextBtn.onclick = () => location.reload();
+questionEl.textContent = `終了！得点は ${score} / ${quiz.length} 点`;
+choicesEl.innerHTML = '';
+progressEl.style.width = '100%';
+nextBtn.textContent = 'もう一度';
+nextBtn.classList.remove('hidden');
+nextBtn.onclick = () => location.reload();
 }
 
-function shuffle(a) { for (let i = a.length - 1; i; i--) { const j = Math.floor(Math.random() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; } return a; }
+function shuffle(arr) {
+for (let i = arr.length - 1; i > 0; i--) {
+  const j = Math.floor(Math.random() * (i + 1));
+  [arr[i], arr[j]] = [arr[j], arr[i]];
+}
+return arr;
+}
