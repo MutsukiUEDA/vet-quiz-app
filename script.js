@@ -1,6 +1,6 @@
 import Papa from 'https://cdn.jsdelivr.net/npm/papaparse@5.4.3/+esm'; // ← ES6 import でも OK
 
-const CSV_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vR3-TJZEjscjRTrAOLi3t64v8H7lbV9X2jh-SFdokO2BEFRT4tfwG-MjX7OnxOcpRYvsh8fRb50uViB/pub?output=csv';
+const CSV_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vR3-TJZEjscjRTrAOLi3t64v8H7lbV9X2jh-SFdokO2BEFRT4tfwG-MjX7OnxOcpRYvsh8fRb50uViB/pub?gid=0&single=true&output=csv';
 
 /* メイン */
 fetch(CSV_URL)
