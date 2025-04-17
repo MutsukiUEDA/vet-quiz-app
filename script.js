@@ -1,26 +1,25 @@
-import Papa from 'https://cdn.jsdelivr.net/npm/papaparse@5.4.3/+esm'; // ← ES6 import でも OK
+/* === 1. Google Sheet CSV URL ================================= */
+const CSV_URL =
+  'https://docs.google.com/spreadsheets/d/e/2PACX-1vR3-TJZEjscjRTrAOLi3t64v8H7lbV9X2jh-SFdokO2BEFRT4tfwG-MjX7OnxOcpRYvsh8fRb50uViB/pub?gid=0&single=true&output=csv';
 
-const CSV_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vR3-TJZEjscjRTrAOLi3t64v8H7lbV9X2jh-SFdokO2BEFRT4tfwG-MjX7OnxOcpRYvsh8fRb50uViB/pub?gid=0&single=true&output=csv';
-
-/* メイン */
+/* === 2. CSV を読み込み、配列にしてからクイズ開始 ============ */
 fetch(CSV_URL)
   .then(r => r.text())
   .then(text => {
     const { data } = Papa.parse(text, { header: true, skipEmptyLines: true });
-    const qs = data.map(r => ({
-      question: r.Question,
-      choices : [r.Choice1, r.Choice2, r.Choice3, r.Choice4],
-      answer  : Number(r.AnswerIndex)
+    const questions = data.map(row => ({
+      question: row.Question,
+      choices : [row.Choice1, row.Choice2, row.Choice3, row.Choice4],
+      answer  : Number(row.AnswerIndex)
     }));
-    startQuiz(qs);           // ← この関数を下で実装
+    startQuiz(questions);           // ← ここから下はクイズ本体
   })
   .catch(e => {
     alert('問題データを取得できませんでした');
     console.error(e);
   });
 
-
-/* ここからクイズのロジック ==================== */
+/* === 3. クイズ本体（以前のロジックをここに一本化） ============ */
 let quiz = [], current = 0, score = 0;
 
 const questionEl = document.getElementById('question');
@@ -33,7 +32,7 @@ const nextBtn    = document.getElementById('next-btn');
 nextBtn.addEventListener('click', () => loadQuestion(++current));
 
 function startQuiz(all) {
-  quiz = shuffle([...all]).slice(0, 10); // 10 問抽出
+  quiz = shuffle([...all]).slice(0, 10);     // 10 問抽出
   current = score = 0;
   loadQuestion(current);
 }

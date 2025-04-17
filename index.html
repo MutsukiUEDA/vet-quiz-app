@@ -5,37 +5,43 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <title>4択クイズ</title>
-  <link rel="stylesheet" href="style.css">
-  <!-- index.html の <head> 内など -->
-  <script src="https://cdn.jsdelivr.net/npm/papaparse@5.4.3/papaparse.min.js"></script>
-  <script type="module" src="script.js"></script>
 
+  <!-- スタイルシート -->
+  <link rel="stylesheet" href="style.css">
+
+  <!-- Papa Parse（CSV → 配列に変換するライブラリ） -->
+  <script src="https://cdn.jsdelivr.net/npm/papaparse@5.4.3/papaparse.min.js"></script>
+
+  <!-- クイズのロジック -->
+  <script type="module" src="script.js"></script>
 </head>
+
 <body>
   <div class="container">
 
-    <!-- 進捗バーとスコア -->
+    <!-- ヘッダー：タイトル・進捗バー・得点表示 -->
     <header>
       <h1 class="title">4択クイズ</h1>
+
       <div id="progress-wrapper">
         <div id="progress-bar"></div>
       </div>
+
       <p id="score-label">0 / 10</p>
     </header>
 
-    <!-- 質問 -->
+    <!-- メイン：問題文と選択肢 -->
     <main>
       <h2 id="question">ここに問題文</h2>
       <ul id="choices"></ul>
     </main>
 
-    <!-- フッター（次へボタン＆結果表示） -->
+    <!-- フッター：判定メッセージと次へボタン -->
     <footer>
       <p id="result"></p>
       <button id="next-btn" class="hidden">次の問題 ▶</button>
     </footer>
 
   </div>
-  <script type="module" src="script.js"></script>
 </body>
 </html>
