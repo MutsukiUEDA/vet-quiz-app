@@ -1,5 +1,5 @@
 /* ==== 1. Google Sheet の CSV URL ==== */
-const CSV_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vR3-TJZEjscjRTrAOLi3t64v8H7lbV9X2jh-SFdokO2BEFRT4tfwG-MjX7OnxOcpRYvsh8fRb50uViB/export?format=csv&gid=0';
+const CSV_URL = 'https://docs.google.com/spreadsheets/d/2PACX-1vR3-TJZEjscjRTrAOLi3t64v8H7lbV9X2jh-SFdokO2BEFRT4tfwG-MjX7OnxOcpRYvsh8fRb50uViB/export?format=csv&gid=0';
 
 /* ==== 2. 読み込みとパース ==== */
 fetch(CSV_URL)
