@@ -24,6 +24,7 @@ fetch(CSV_URL)
       question: row.Question,
       choices,
       answer
+      explanation: row.Explanation 
     };
   });
 
@@ -43,6 +44,7 @@ const choicesEl  = document.getElementById('choices');
 const progressEl = document.getElementById('progress-bar');
 const scoreEl    = document.getElementById('score-label');
 const resultEl   = document.getElementById('result');
+const explainEl  = document.getElementById('explanation');
 const nextBtn    = document.getElementById('next-btn');
 
 nextBtn.addEventListener('click', () => loadQuestion(++current));
@@ -60,6 +62,8 @@ if (i >= quiz.length) {
 }
 
 resultEl.textContent = '';
+explainEl.textContent = ''; 
+explainEl.classList.add('hidden');
 nextBtn.classList.add('hidden');
 choicesEl.innerHTML = '';
 
@@ -99,6 +103,12 @@ if (selected === correct) {
   resultEl.textContent = '残念…';
 }
 
+const exp = quiz[current].explanation;
+if (exp) {
+  explainEl.textContent = exp;
+  explainEl.classList.remove('hidden');
+}  
+
 nextBtn.classList.remove('hidden');
 updateProgress();
 }
@@ -116,6 +126,8 @@ scoreEl.textContent = `${score} / ${quiz.length}`;
 function showFinal() {
 questionEl.textContent = `終了！得点は ${score} / ${quiz.length} 点`;
 resultEl.textContent = ''; 
+explainEl.textContent = '';
+explainEl.classList.add('hidden');
 choicesEl.innerHTML = '';
 progressEl.style.width = '100%';
 nextBtn.textContent = 'もう一度';
